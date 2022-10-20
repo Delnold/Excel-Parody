@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Excel_Parody/1.0.0": {
+        "dependencies": {
+          "MathParser.org-mXparser": "5.0.7"
+        },
+        "runtime": {
+          "Excel_Parody.dll": {}
+        }
+      },
+      "MathParser.org-mXparser/5.0.7": {
+        "runtime": {
+          "lib/net6.0/MathParser.org-mXparser.dll": {
+            "assemblyVersion": "5.0.7.0",
+            "fileVersion": "5.0.7.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Excel_Parody/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MathParser.org-mXparser/5.0.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oLlcOjBdaxSVCFiBuWSI/KXcdlUhc2QfNgR9zpONae0S54ff0Q+3JfF5Vftsg03zB4gTTjmgnFx/DGmwlwgOmw==",
+      "path": "mathparser.org-mxparser/5.0.7",
+      "hashPath": "mathparser.org-mxparser.5.0.7.nupkg.sha512"
+    }
+  }
+}

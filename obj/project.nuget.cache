@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "IQTb7atjD06aGmFho3POd91bDbyV4R8lz55DGKJczHOXUirCmS5HwmjYIMraRDcEXeoZJiM4lX89Mp7blNrRTQ==",
+  "success": true,
+  "projectFilePath": "D:\\с#\\Excel_Parody\\Excel_Parody.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dmitr\\.nuget\\packages\\mathparser.org-mxparser\\5.0.7\\mathparser.org-mxparser.5.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
