@@ -7,6 +7,11 @@ using System.Windows.Forms;
 using org.mariuszgromada.math.mxparser;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
+
+
 namespace Excel_Parody
 {
 
@@ -56,7 +61,14 @@ namespace Excel_Parody
                 {
                     if (Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][1] != "")
                     {
+                        /*
+                        if(Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] == "DivByZero")
+                        {
+                            table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
+                            continue;
+                        }
                         expression = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][1];
+                        */
                         /*
                         try
                         {
@@ -70,6 +82,7 @@ namespace Excel_Parody
                             return;
                         }
                         */
+                        expression = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][1];
                         expression_RegEX = Regex.Replace(expression, pattern,
                     m => Cell_Dictionary[m.Value][0]);
                         mx_type_Expression = new Expression(expression_RegEX);
@@ -239,6 +252,18 @@ namespace Excel_Parody
 
             int rows_ind = dataGridView1.CurrentCell.RowIndex;
             int cols_ind = dataGridView1.CurrentCell.ColumnIndex;
+
+            /*
+            string expression_without_spaces = expression.Replace(" ", string.Empty);
+            if (Regex.IsMatch(expression_without_spaces, @"/0\.") == false)
+            {
+                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][0] = "DivByZero";
+                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
+                convert_From_Dict_To_Table();
+                return;
+            }
+            */ 
+
             /*
             try
             {
@@ -262,5 +287,21 @@ namespace Excel_Parody
             convert_From_Dict_To_Table();
       
         }
+        // Save
+        private void button3_Click(object sender, EventArgs e)
+        {
+            File.WriteAllText(@"D:\save_test.json", JsonConvert.SerializeObject(Cell_Dictionary));
+        }
+        // Open
+        private void button4_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "json files (*json)|*.json|All files (*.*)|*.*";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Cell_Dictionary = JsonConvert.DeserializeObject<SortedDictionary<string, string[]>>(File.ReadAllText(ofd.FileName));
+                convert_From_Dict_To_Table();
+            }
+;        }
     }
 }
