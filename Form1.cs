@@ -50,10 +50,11 @@ namespace Excel_Parody
             var parsing_Row_Col = Regex.Matches(index_of_R_C, @"\d+");
             var rows_c = Int32.Parse(parsing_Row_Col[0].ToString());
             var col_c = Int32.Parse(parsing_Row_Col[1].ToString());
-            dynamic expression_RegEX;
+            dynamic expression_RegEX = "";
             dynamic mx_type_Expression;
             string expression;
-            string pattern = @"[R]\d[C]\d";
+            string pattern = @"[R]\d+[C]\d+";
+            bool success = false;
 
             for (int i_r = 1; i_r <= rows_c; i_r++)
             {
@@ -61,33 +62,66 @@ namespace Excel_Parody
                 {
                     if (Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][1] != "")
                     {
-                        /*
-                        if(Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] == "DivByZero")
-                        {
-                            table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
-                            continue;
-                        }
                         expression = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][1];
-                        */
-                        /*
+
                         try
                         {
+                            if (Regex.Matches(expression, @"R" + (i_r).ToString() + @"C" + (i_c).ToString()).Count > 0)
+                            {
+                                Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = "RecursionRef";
+                                table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
+                                success = false;
+                                continue;
+                            }
+
                             expression_RegEX = Regex.Replace(expression, pattern,
-                                m => Cell_Dictionary[m.Value][0]);
+                            m => Cell_Dictionary[m.Value][0]);
+
+                            if (expression_RegEX.Contains("RecursionRef"))
+                            {
+                                Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = "Rec_Referecnce";
+                                table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
+                                success = false;
+                                continue;
+                            }
+                            success = true;
+                            if (expression_RegEX.Contains("Inv_Ind_Format"))
+                            {
+                                Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = "Inv_Ind_Format_Ref";
+                                table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
+                                success = false;
+                                continue;
+                            }
+                            success = true;
+
                         }
-                        catch (Exception l)
+                        catch (KeyNotFoundException)
                         {
-                            Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = l.Message.ToString();
-                            Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][1] = expression;
-                            return;
+                             Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = "Inv_Ind_Format";
+                             table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
+               
+
                         }
-                        */
-                        expression = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][1];
-                        expression_RegEX = Regex.Replace(expression, pattern,
-                    m => Cell_Dictionary[m.Value][0]);
-                        mx_type_Expression = new Expression(expression_RegEX);
-                        Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = mx_type_Expression.calculate().ToString();
-                        table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0]; ;
+                        finally
+                        {
+                            if (success)
+                            {
+                                
+                                mx_type_Expression = new Expression(expression_RegEX);
+                                if (Double.IsNaN(mx_type_Expression.calculate()))
+                                {
+                                    Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = "NaN";
+                                    table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
+                                    
+                                }
+                                else
+                                {
+                                    Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0] = mx_type_Expression.calculate().ToString();
+                                    table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
+                                }
+                            }
+                        }
+                       
                     }
                     else
                         table.Rows[i_r - 1][i_c - 1] = Cell_Dictionary["R" + (i_r).ToString() + "C" + (i_c).ToString()][0];
@@ -246,46 +280,35 @@ namespace Excel_Parody
           
 
             string expression = dataGridView1.CurrentCell.Value.ToString();
-            string pattern = @"[R]\d[C]\d";
+            /*
+            string pattern = @"[R]\d+[C]\d+";
             dynamic expression_RegEX;
             dynamic mx_type_Expression;
-
+            */
             int rows_ind = dataGridView1.CurrentCell.RowIndex;
             int cols_ind = dataGridView1.CurrentCell.ColumnIndex;
-
-            /*
-            string expression_without_spaces = expression.Replace(" ", string.Empty);
-            if (Regex.IsMatch(expression_without_spaces, @"/0\.") == false)
-            {
-                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][0] = "DivByZero";
-                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
-                convert_From_Dict_To_Table();
-                return;
-            }
-            */ 
-
+            Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
+            convert_From_Dict_To_Table();
             /*
             try
             {
                 expression_RegEX = Regex.Replace(expression, pattern,
-                    m => Cell_Dictionary[m.Value][0]);
+                        m => Cell_Dictionary[m.Value][0]);
             }
-            catch(Exception l)
+            catch
             {
-                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][0] = l.Message.ToString();
+                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][0] = "InvalidIndexFormat";
                 Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
+                convert_From_Dict_To_Table();
                 return;
             }
-            */
-            expression_RegEX = Regex.Replace(expression, pattern,
-                    m => Cell_Dictionary[m.Value][0]);
             mx_type_Expression = new Expression(expression_RegEX);
 
             Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][0] = mx_type_Expression.calculate().ToString();
             Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
 
             convert_From_Dict_To_Table();
-      
+            */
         }
         // Save
         private void button3_Click(object sender, EventArgs e)
