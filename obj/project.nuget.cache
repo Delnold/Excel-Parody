@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NNkGc3OLYmuk7EYufVR7F1gqiyDxXRh/p2roS1AqxoLSo+yr9sClJgLCxrTiihef2muLjkc54IlAW0l6ZKOUlw==",
+  "dgSpecHash": "AihGV6r15e0KSbSRQYL+jgD6E8rmoEqyZJ/dBYwxQ0Iz5E6VORXaoLA64NrqC9bBx1WoUH5VDb457i24rseH0g==",
   "success": true,
-  "projectFilePath": "D:\\с#\\Excel_Parody\\Excel_Parody.csproj",
+  "projectFilePath": "E:\\University\\VSProjects\\Excel-Parody\\Excel_Parody.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dmitr\\.nuget\\packages\\mathparser.org-mxparser\\5.0.7\\mathparser.org-mxparser.5.0.7.nupkg.sha512",
     "C:\\Users\\dmitr\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"

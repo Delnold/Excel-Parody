@@ -134,11 +134,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\с#\\Excel_Parody\\Excel_Parody.csproj",
+      "projectUniqueName": "E:\\University\\VSProjects\\Excel-Parody\\Excel_Parody.csproj",
       "projectName": "Excel_Parody",
-      "projectPath": "D:\\с#\\Excel_Parody\\Excel_Parody.csproj",
+      "projectPath": "E:\\University\\VSProjects\\Excel-Parody\\Excel_Parody.csproj",
       "packagesPath": "C:\\Users\\dmitr\\.nuget\\packages\\",
-      "outputPath": "D:\\с#\\Excel_Parody\\obj\\",
+      "outputPath": "E:\\University\\VSProjects\\Excel-Parody\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\dmitr\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -9,9 +9,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
-
-
-
 namespace Excel_Parody
 {
 
@@ -22,7 +19,9 @@ namespace Excel_Parody
             InitializeComponent();
         }
         private static DataTable table = new DataTable();
+    
         private static SortedDictionary<string, string[]> Cell_Dictionary = new SortedDictionary<string, string[]>(new SortByRows());
+        
         public static void convert_From_Dict_To_Table()
         {
             table.Rows.Clear();
@@ -40,9 +39,18 @@ namespace Excel_Parody
                 {
                     table.Rows.Add();
                 }
-           
+            AddingZero();
             convert_From_Expression_To_Value();
 
+        }
+        public static void AddingZero()
+        {
+            List<string> keys = new List<string>(Cell_Dictionary.Keys);
+            foreach (string key in keys)
+            {
+                if (Cell_Dictionary[key][1] == "")
+                    Cell_Dictionary[key][0] = "0";
+            }
         }
         public static void convert_From_Expression_To_Value()
         {
@@ -154,11 +162,12 @@ namespace Excel_Parody
             var parsing_Row_Col = Regex.Matches(index_of_R_C, @"\d+");
             var rows_c = Int32.Parse(parsing_Row_Col[0].ToString());
             var col_c = Int32.Parse(parsing_Row_Col[1].ToString());
-
+            Console.WriteLine(rows_c + col_c);
             for (int i = 1; i <= col_c; i++)
-            {
-                Cell_Dictionary.Add("R" + (rows_c + 1).ToString() + "C" + i.ToString(), new[] { "", "" });
-            }
+                {
+                    Cell_Dictionary.Add("R" + (rows_c + 1).ToString() + "C" + i.ToString(), new[] { "", "" });
+                }
+           
             convert_From_Dict_To_Table();
         }
         // Add Column
@@ -169,11 +178,10 @@ namespace Excel_Parody
             var parsing_Row_Col = Regex.Matches(index_of_R_C, @"\d+");
             var rows_c = Int32.Parse(parsing_Row_Col[0].ToString());
             var col_c = Int32.Parse(parsing_Row_Col[1].ToString());
-
             for (int i = 1; i <= rows_c; i++)
-            {
-                Cell_Dictionary.Add("R" + (i).ToString() + "C" + (col_c + 1).ToString(), new[] { "", "" });
-            }
+                {
+                    Cell_Dictionary.Add("R" + (i).ToString() + "C" + (col_c + 1).ToString(), new[] { "", "" });
+                }
             convert_From_Dict_To_Table();
         }
         // Adding Indexes to Rows
@@ -273,6 +281,7 @@ namespace Excel_Parody
             int cols_ind = dataGridView1.CurrentCell.ColumnIndex;
             textBox1.Text = Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1];
             textBox2.Text = "R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString();
+           
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -280,40 +289,15 @@ namespace Excel_Parody
           
 
             string expression = dataGridView1.CurrentCell.Value.ToString();
-            /*
-            string pattern = @"[R]\d+[C]\d+";
-            dynamic expression_RegEX;
-            dynamic mx_type_Expression;
-            */
             int rows_ind = dataGridView1.CurrentCell.RowIndex;
             int cols_ind = dataGridView1.CurrentCell.ColumnIndex;
             Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
             convert_From_Dict_To_Table();
-            /*
-            try
-            {
-                expression_RegEX = Regex.Replace(expression, pattern,
-                        m => Cell_Dictionary[m.Value][0]);
-            }
-            catch
-            {
-                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][0] = "InvalidIndexFormat";
-                Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
-                convert_From_Dict_To_Table();
-                return;
-            }
-            mx_type_Expression = new Expression(expression_RegEX);
-
-            Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][0] = mx_type_Expression.calculate().ToString();
-            Cell_Dictionary["R" + (rows_ind + 1).ToString() + "C" + (cols_ind + 1).ToString()][1] = expression;
-
-            convert_From_Dict_To_Table();
-            */
         }
         // Save
         private void button3_Click(object sender, EventArgs e)
         {
-            File.WriteAllText(@"D:\save_test.json", JsonConvert.SerializeObject(Cell_Dictionary));
+            File.WriteAllText(@"E:\University\VSProjects\Excel-Parody\test_json.json", JsonConvert.SerializeObject(Cell_Dictionary));
         }
         // Open
         private void button4_Click(object sender, EventArgs e)
@@ -322,9 +306,24 @@ namespace Excel_Parody
             ofd.Filter = "json files (*json)|*.json|All files (*.*)|*.*";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Cell_Dictionary = JsonConvert.DeserializeObject<SortedDictionary<string, string[]>>(File.ReadAllText(ofd.FileName));
+                dynamic Cell_Dictionary_Copy = JsonConvert.DeserializeObject<SortedDictionary<string, string[]>>(File.ReadAllText(ofd.FileName));
+                Cell_Dictionary.Clear();
+                foreach(var newCell in Cell_Dictionary_Copy)
+                {
+                    Cell_Dictionary.Add(newCell.Key, newCell.Value);
+                }
                 convert_From_Dict_To_Table();
             }
 ;        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Made by Dmytro Paliienko K-28\r\nImplementation of Excel through Winforms.\r\n" +
+                "(Row+) - adds a new row\n(Row-) deletes the selected row.\r\n" +
+                "(Column+) - adds a new column\n(Column-) - deletes the selected column.\r\n" +
+                "All cells support all math operations like min,max,div,mult.\r\n" +
+                "Also the name of the cells can take part in these operations.\r\n" +
+                "You can also save the table in JSON format, and open it directly in it");
+        }
     }
 }

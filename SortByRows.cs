@@ -12,9 +12,9 @@ namespace Excel_Parody
         public int Compare(string x, string y)
         {
             var first_str = Regex.Matches(x, @"\d+");
-            var second_str = Regex.Matches(y, @"\d+");
-            var f_num = Convert.ToInt32(first_str[0].ToString() + first_str[1].ToString());
-            var s_num = Convert.ToInt32(second_str[0].ToString() + second_str[1].ToString());
+            var second_str = Regex.Matches(y, @"\d+");  
+            var f_num = Convert.ToDouble(first_str[0].Value) + (Convert.ToDouble(first_str[1].Value) / (1000 ^ (first_str[1].Value.ToString().Length)));
+            var s_num = Convert.ToDouble(second_str[0].Value) + (Convert.ToDouble(second_str[1].Value) / (1000 ^ (second_str[1].Value.ToString().Length)));
             if (f_num == s_num)
             {
                 return 0;
